@@ -1,18 +1,33 @@
-# DocuBot - AI Document Q&A Assistant
+# 📄 DocuBot - AI Document Q&A Assistant
 
-Upload PDFs and ask questions using Google's Gemini AI.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://docubot.streamlit.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
-- 📄 Upload PDF documents
-- 🔍 Extract text from PDFs
-- 🤖 Ask questions based on document content
-- 🔑 Uses Google Gemini API
+Upload PDF documents and ask questions based on their content using Google's Gemini AI. Get instant, context-aware answers from your documents!
 
-## Live Demo
-[View Demo](https://yourusername.github.io/docubot)
+## ✨ Features
 
-## How to Use
-1. Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Upload a PDF document
-3. Enter your API key
-4. Start asking questions!
+- 📤 **Upload PDF documents** - Support for multiple pages
+- 🔍 **Automatic text extraction** - Extract readable text from PDFs
+- 🤖 **AI-powered Q&A** - Ask questions and get answers based on document content
+- 🔐 **Secure API handling** - API key stored securely in session
+- 💬 **Chat interface** - Clean, modern chat UI
+- 📱 **Responsive design** - Works on desktop and mobile
+- 📊 **Usage statistics** - Track tokens and document info
+
+## 🚀 Live Demo
+
+🔗 **Try it here:** [https://docubot.streamlit.app](https://docubot.streamlit.app)
+
+## 📋 Prerequisites
+
+- Google Gemini API Key (get it for free from [Google AI Studio](https://aistudio.google.com/app/apikey))
+- Python 3.8 or higher
+
+## 🛠️ Local Installation
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/yourusername/docubot-streamlit.git
+cd docubot-streamlit
