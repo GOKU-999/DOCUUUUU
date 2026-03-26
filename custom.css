@@ -1,0 +1,161 @@
+/* DocuBot Custom Styles */
+
+/* Main container styling */
+.stApp {
+    background: linear-gradient(145deg, #f6f9fc 0%, #edf2f7 100%);
+}
+
+/* Sidebar styling */
+.css-1d391kg {
+    background: rgba(255, 255, 255, 0.95);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Chat message containers */
+.stChatMessage {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* User message styling */
+[data-testid="stChatMessage"]:has([data-testid="stMarkdown"]:first-child) {
+    background-color: #3182ce;
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+}
+
+/* Assistant message styling */
+[data-testid="stChatMessage"]:has([data-testid="stMarkdown"]:nth-child(2)) {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #e2edf2;
+    border-radius: 18px 18px 18px 4px;
+}
+
+/* Custom button styling */
+.stButton button {
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.stButton button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* File uploader styling */
+.stFileUploader {
+    border: 2px dashed #cbd5e0;
+    border-radius: 16px;
+    padding: 1rem;
+    background: #fafcff;
+    transition: all 0.2s ease;
+}
+
+.stFileUploader:hover {
+    border-color: #3182ce;
+    background: #ebf8ff;
+}
+
+/* Info boxes */
+.stAlert {
+    border-radius: 12px;
+    border-left-width: 4px;
+}
+
+/* Success message styling */
+.stAlert[data-baseweb="notification"]:has(svg[data-icon="check-circle"]) {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+/* Error message styling */
+.stAlert[data-baseweb="notification"]:has(svg[data-icon="alert-circle"]) {
+    background: #fed7d7;
+    color: #9b2c2c;
+}
+
+/* Spinner animation */
+.stSpinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .stChatMessage {
+        max-width: 100%;
+    }
+    
+    .stButton button {
+        font-size: 14px;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Tooltip styling */
+[data-testid="stTooltipContent"] {
+    background-color: #1a2c3e;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Expander styling */
+.streamlit-expanderHeader {
+    background: #f7fafc;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.streamlit-expanderContent {
+    border-radius: 0 0 8px 8px;
+    background: white;
+}
