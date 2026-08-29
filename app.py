@@ -17,6 +17,101 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Load custom CSS with dark mode support
+def load_css():
+    """Load custom CSS styling with dark mode support"""
+    try:
+        with open('styles/custom.css') as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    except FileNotFoundError:
+        # Fallback styling if CSS file doesn't exist
+        st.markdown("""
+        <style>
+        /* Dark mode support */
+        .stApp {
+            background-color: #0e1117;
+        }
+        .main {
+            padding: 0rem 1rem;
+        }
+        .stChatMessage {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        /* Dark mode chat messages */
+        [data-testid="stChatMessage"] {
+            background-color: #1e1e1e;
+            border: 1px solid #333333;
+        }
+        [data-testid="stChatMessage"][data-role="user"] {
+            background-color: #2d2d2d;
+        }
+        [data-testid="stChatMessage"][data-role="assistant"] {
+            background-color: #1a1a1a;
+        }
+        /* Sidebar dark mode */
+        .css-1d391kg {
+            background-color: #0e1117;
+        }
+        /* Input fields dark mode */
+        .stTextInput > div > div > input {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .stTextArea > div > div > textarea {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        /* Buttons dark mode */
+        .stButton > button {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: 1px solid #444444;
+        }
+        .stButton > button:hover {
+            background-color: #3d3d3d;
+            border-color: #666666;
+        }
+        /* Info, success, warning boxes dark mode */
+        .stAlert {
+            background-color: #1e1e1e;
+            border-color: #444444;
+        }
+        .stAlert > div {
+            color: #ffffff;
+        }
+        /* Markdown text color */
+        .stMarkdown {
+            color: #ffffff;
+        }
+        /* Code blocks */
+        code {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        /* Divider */
+        hr {
+            border-color: #333333;
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444444;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555555;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
 # Initialize session state variables
 def init_session_state():
     """Initialize all session state variables"""
@@ -30,6 +125,8 @@ def init_session_state():
         st.session_state.api_key_configured = False
     if 'total_tokens' not in st.session_state:
         st.session_state.total_tokens = 0
+    if 'dark_mode' not in st.session_state:
+        st.session_state.dark_mode = True
 
 # Configure Gemini API
 def configure_gemini(api_key):
@@ -119,8 +216,17 @@ def clear_chat():
     else:
         add_message("assistant", "🧹 Chat cleared! Upload a document to start asking questions.")
 
+# Toggle dark mode
+def toggle_dark_mode():
+    """Toggle dark mode on/off"""
+    st.session_state.dark_mode = not st.session_state.dark_mode
+    st.rerun()
+
 # Main application
 def main():
+    # Load custom CSS
+    load_css()
+    
     # Initialize session state
     init_session_state()
     
@@ -128,6 +234,17 @@ def main():
     with st.sidebar:
         st.markdown("## 📄 DocuBot")
         st.markdown("*AI-powered Document Q&A*")
+        st.divider()
+        
+        # Dark mode toggle
+        st.markdown("### 🎨 Theme")
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.write("Dark Mode")
+        with col2:
+            if st.button("🌙" if st.session_state.dark_mode else "☀️", help="Toggle dark/light mode"):
+                toggle_dark_mode()
+        
         st.divider()
         
         # API Key Configuration
