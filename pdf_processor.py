@@ -4,7 +4,6 @@ PDF Processing Utilities for DocuBot
 
 import PyPDF2
 import io
-import pypdf
 
 def extract_text_from_pdf(pdf_file):
     """
@@ -17,6 +16,9 @@ def extract_text_from_pdf(pdf_file):
         str: Extracted text from the PDF
     """
     try:
+        # Reset file pointer to beginning
+        pdf_file.seek(0)
+        
         # Read the PDF file
         pdf_reader = PyPDF2.PdfReader(pdf_file)
         
@@ -49,6 +51,7 @@ def get_pdf_metadata(pdf_file):
         dict: PDF metadata
     """
     try:
+        pdf_file.seek(0)
         pdf_reader = PyPDF2.PdfReader(pdf_file)
         metadata = pdf_reader.metadata
         return {
@@ -71,6 +74,9 @@ def validate_pdf(pdf_file):
         tuple: (is_valid, message)
     """
     try:
+        # Reset file pointer
+        pdf_file.seek(0)
+        
         # Check if file is PDF
         if not pdf_file.name.lower().endswith('.pdf'):
             return False, "File must be a PDF"
