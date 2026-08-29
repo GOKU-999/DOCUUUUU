@@ -5,7 +5,7 @@ Main Streamlit application file
 
 import streamlit as st
 import google.generativeai as genai
-from utils.pdf_processor import extract_text_from_pdf
+from utils.pdf_processor import extract_text_from_pdf, validate_pdf
 import os
 from datetime import datetime
 
@@ -16,12 +16,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# Load custom CSS
-def load_css():
-    """Load custom CSS styling"""
-    with open('styles/custom.css') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Initialize session state variables
 def init_session_state():
@@ -59,7 +53,7 @@ def get_gemini_response(question, context):
         You are DocuBot, an AI assistant that answers questions strictly based on the provided document.
         
         DOCUMENT CONTENT:
-        {context[:300000]}  # Limit context to 300k characters
+        {context[:300000]}
         
         USER QUESTION: {question}
         
@@ -76,7 +70,7 @@ def get_gemini_response(question, context):
         return response.text
         
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"Error generating response: {str(e)}"
 
 # Process uploaded PDF
 def process_uploaded_file(uploaded_file):
@@ -127,9 +121,6 @@ def clear_chat():
 
 # Main application
 def main():
-    # Load custom CSS
-    load_css()
-    
     # Initialize session state
     init_session_state()
     
