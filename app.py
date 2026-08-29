@@ -17,100 +17,248 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load custom CSS with dark mode support
+# Load custom CSS with proper dark mode support
 def load_css():
     """Load custom CSS styling with dark mode support"""
-    try:
-        with open('styles/custom.css') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    except FileNotFoundError:
-        # Fallback styling if CSS file doesn't exist
-        st.markdown("""
-        <style>
-        /* Dark mode support */
-        .stApp {
-            background-color: #0e1117;
-        }
-        .main {
-            padding: 0rem 1rem;
-        }
-        .stChatMessage {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        /* Dark mode chat messages */
-        [data-testid="stChatMessage"] {
-            background-color: #1e1e1e;
-            border: 1px solid #333333;
-        }
-        [data-testid="stChatMessage"][data-role="user"] {
-            background-color: #2d2d2d;
-        }
-        [data-testid="stChatMessage"][data-role="assistant"] {
-            background-color: #1a1a1a;
-        }
-        /* Sidebar dark mode */
-        .css-1d391kg {
-            background-color: #0e1117;
-        }
-        /* Input fields dark mode */
-        .stTextInput > div > div > input {
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-        .stTextArea > div > div > textarea {
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-        /* Buttons dark mode */
-        .stButton > button {
-            background-color: #2d2d2d;
-            color: #ffffff;
-            border: 1px solid #444444;
-        }
-        .stButton > button:hover {
-            background-color: #3d3d3d;
-            border-color: #666666;
-        }
-        /* Info, success, warning boxes dark mode */
-        .stAlert {
-            background-color: #1e1e1e;
-            border-color: #444444;
-        }
-        .stAlert > div {
-            color: #ffffff;
-        }
-        /* Markdown text color */
-        .stMarkdown {
-            color: #ffffff;
-        }
-        /* Code blocks */
-        code {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-        }
-        /* Divider */
-        hr {
-            border-color: #333333;
-        }
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #444444;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555555;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+    /* Force dark mode background */
+    .stApp {
+        background-color: #0e1117 !important;
+    }
+    
+    /* Main container */
+    .main {
+        padding: 0rem 1rem;
+    }
+    
+    /* ALL text should be white in dark mode */
+    .stMarkdown, .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, 
+    .stMarkdown h4, .stMarkdown h5, .stMarkdown h6, .stMarkdown li, .stMarkdown span,
+    .stAlert, .stAlert p, .stAlert div, .stAlert span,
+    .stInfo, .stInfo p, .stInfo div,
+    .stSuccess, .stSuccess p, .stSuccess div,
+    .stWarning, .stWarning p, .stWarning div,
+    .stError, .stError p, .stError div,
+    .stCaption, .stCaption p,
+    label, .stTextInput label, .stFileUploader label,
+    .stChatMessage, .stChatMessage p, .stChatMessage div,
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] div,
+    .css-1d391kg, .css-1d391kg p, .css-1d391kg div,
+    .sidebar .sidebar-content, .sidebar .sidebar-content p {
+        color: #ffffff !important;
+    }
+    
+    /* Chat messages */
+    [data-testid="stChatMessage"] {
+        background-color: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        border-radius: 0.5rem !important;
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    [data-testid="stChatMessage"][data-role="user"] {
+        background-color: #2d2d2d !important;
+        border-left: 3px solid #4CAF50 !important;
+    }
+    
+    [data-testid="stChatMessage"][data-role="assistant"] {
+        background-color: #1a1a1a !important;
+        border-left: 3px solid #2196F3 !important;
+    }
+    
+    [data-testid="stChatMessage"] p {
+        color: #ffffff !important;
+    }
+    
+    /* Sidebar */
+    .stSidebar, .css-1d391kg {
+        background-color: #0e1117 !important;
+        border-right: 1px solid #333333 !important;
+    }
+    
+    .stSidebar p, .stSidebar div, .stSidebar span, .stSidebar label {
+        color: #ffffff !important;
+    }
+    
+    /* Input fields */
+    .stTextInput > div > div > input {
+        background-color: #1e1e1e !important;
+        color: #ffffff !important;
+        border: 1px solid #444444 !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #4CAF50 !important;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+    }
+    
+    .stTextArea > div > div > textarea {
+        background-color: #1e1e1e !important;
+        color: #ffffff !important;
+        border: 1px solid #444444 !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background-color: #2d2d2d !important;
+        color: #ffffff !important;
+        border: 1px solid #444444 !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stButton > button:hover {
+        background-color: #3d3d3d !important;
+        border-color: #666666 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* Alerts - make text visible */
+    .stAlert {
+        background-color: #1e1e1e !important;
+        border-color: #444444 !important;
+        border-radius: 0.5rem !important;
+        color: #ffffff !important;
+    }
+    
+    .stAlert > div {
+        color: #ffffff !important;
+    }
+    
+    .stAlert p, .stAlert div, .stAlert span {
+        color: #ffffff !important;
+    }
+    
+    .stAlert[data-baseweb="notification"][kind="success"] {
+        border-left: 4px solid #4CAF50 !important;
+    }
+    
+    .stAlert[data-baseweb="notification"][kind="error"] {
+        border-left: 4px solid #f44336 !important;
+    }
+    
+    .stAlert[data-baseweb="notification"][kind="warning"] {
+        border-left: 4px solid #ff9800 !important;
+    }
+    
+    .stAlert[data-baseweb="notification"][kind="info"] {
+        border-left: 4px solid #2196F3 !important;
+    }
+    
+    /* File uploader */
+    [data-testid="stFileUploader"] {
+        background-color: #1e1e1e !important;
+        border: 1px dashed #444444 !important;
+        border-radius: 0.5rem !important;
+        padding: 1rem !important;
+        color: #ffffff !important;
+    }
+    
+    [data-testid="stFileUploader"]:hover {
+        border-color: #4CAF50 !important;
+    }
+    
+    [data-testid="stFileUploader"] p, [data-testid="stFileUploader"] div {
+        color: #ffffff !important;
+    }
+    
+    /* Chat input */
+    [data-testid="stChatInput"] > div > div > textarea {
+        background-color: #1e1e1e !important;
+        color: #ffffff !important;
+        border: 1px solid #444444 !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    [data-testid="stChatInput"] > div > div > textarea:focus {
+        border-color: #4CAF50 !important;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+    }
+    
+    [data-testid="stChatInput"] > div > div > textarea::placeholder {
+        color: #888888 !important;
+    }
+    
+    /* Info boxes */
+    .stInfo, .stSuccess, .stWarning, .stError {
+        background-color: #1e1e1e !important;
+        border-radius: 0.5rem !important;
+        padding: 0.5rem !important;
+    }
+    
+    .stInfo p, .stSuccess p, .stWarning p, .stError p {
+        color: #ffffff !important;
+    }
+    
+    /* Caption */
+    .stCaption, .stCaption p {
+        color: #aaaaaa !important;
+    }
+    
+    /* Divider */
+    hr {
+        border-color: #333333 !important;
+        margin: 1rem 0 !important;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px !important;
+        height: 8px !important;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a !important;
+        border-radius: 4px !important;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #444444 !important;
+        border-radius: 4px !important;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555555 !important;
+    }
+    
+    /* Code blocks */
+    code {
+        background-color: #1e1e1e !important;
+        color: #e0e0e0 !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+    }
+    
+    /* Spinner */
+    .stSpinner > div {
+        border-color: #4CAF50 !important;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stChatMessage {
+        animation: fadeIn 0.3s ease-in-out !important;
+    }
+    
+    /* Fix for all text elements in sidebar */
+    .css-1d391kg .stMarkdown p,
+    .css-1d391kg .stMarkdown div,
+    .css-1d391kg p,
+    .css-1d391kg div {
+        color: #ffffff !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Initialize session state variables
 def init_session_state():
@@ -125,8 +273,6 @@ def init_session_state():
         st.session_state.api_key_configured = False
     if 'total_tokens' not in st.session_state:
         st.session_state.total_tokens = 0
-    if 'dark_mode' not in st.session_state:
-        st.session_state.dark_mode = True
 
 # Configure Gemini API
 def configure_gemini(api_key):
@@ -140,10 +286,11 @@ def configure_gemini(api_key):
         st.session_state.api_key_configured = False
         return False
 
-# Get Gemini response
+# Get Gemini response - FIXED model name
 def get_gemini_response(question, context):
     """Get response from Gemini API based on document context"""
     try:
+        # Use the correct model name - gemini-1.5-flash or gemini-pro
         model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = f"""
@@ -167,7 +314,33 @@ def get_gemini_response(question, context):
         return response.text
         
     except Exception as e:
-        return f"Error generating response: {str(e)}"
+        error_msg = str(e)
+        # If model not found, try alternative model name
+        if "404" in error_msg or "not found" in error_msg:
+            try:
+                # Try using gemini-pro as fallback
+                model = genai.GenerativeModel('gemini-pro')
+                prompt = f"""
+                You are DocuBot, an AI assistant that answers questions strictly based on the provided document.
+                
+                DOCUMENT CONTENT:
+                {context[:300000]}
+                
+                USER QUESTION: {question}
+                
+                INSTRUCTIONS:
+                1. Answer based ONLY on the information in the document above
+                2. If the answer is not found in the document, say: "I couldn't find relevant information in the uploaded document."
+                3. Be concise, accurate, and helpful
+                4. Use quotes if citing directly from the document
+                
+                ANSWER:
+                """
+                response = model.generate_content(prompt)
+                return response.text
+            except Exception as e2:
+                return f"⚠️ Error: Both gemini-1.5-flash and gemini-pro models failed. Please check your API key and model availability. Details: {str(e2)}"
+        return f"⚠️ Error generating response: {error_msg}"
 
 # Process uploaded PDF
 def process_uploaded_file(uploaded_file):
@@ -216,12 +389,6 @@ def clear_chat():
     else:
         add_message("assistant", "🧹 Chat cleared! Upload a document to start asking questions.")
 
-# Toggle dark mode
-def toggle_dark_mode():
-    """Toggle dark mode on/off"""
-    st.session_state.dark_mode = not st.session_state.dark_mode
-    st.rerun()
-
 # Main application
 def main():
     # Load custom CSS
@@ -234,17 +401,6 @@ def main():
     with st.sidebar:
         st.markdown("## 📄 DocuBot")
         st.markdown("*AI-powered Document Q&A*")
-        st.divider()
-        
-        # Dark mode toggle
-        st.markdown("### 🎨 Theme")
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.write("Dark Mode")
-        with col2:
-            if st.button("🌙" if st.session_state.dark_mode else "☀️", help="Toggle dark/light mode"):
-                toggle_dark_mode()
-        
         st.divider()
         
         # API Key Configuration
@@ -310,7 +466,7 @@ def main():
         # Footer
         st.markdown("---")
         st.markdown("""
-        <div style='text-align: center; font-size: 12px; color: #666;'>
+        <div style='text-align: center; font-size: 12px; color: #888888;'>
             Powered by Google Gemini AI<br>
             Made with ❤️ using Streamlit
         </div>
