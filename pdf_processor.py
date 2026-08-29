@@ -1,90 +1,98 @@
 """
 PDF Processing Utilities for DocuBot
-Handles text extraction from PDF files
 """
 
 import PyPDF2
 import io
-from typing import Optional
+import pypdf
 
-def extract_text_from_pdf(pdf_file) -> Optional[str]:
+def extract_text_from_pdf(pdf_file):
     """
-    Extract text content from uploaded PDF file
+    Extract text from a PDF file
     
     Args:
-        pdf_file: Uploaded file object from Streamlit
+        pdf_file: Uploaded PDF file object
         
     Returns:
-        Extracted text as string, or None if extraction fails
+        str: Extracted text from the PDF
     """
     try:
-        # Create PDF reader object
-        pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_file.getvalue()))
+        # Read the PDF file
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        
+        # Check if PDF has pages
+        if len(pdf_reader.pages) == 0:
+            return ""
         
         # Extract text from all pages
-        extracted_text = []
-        total_pages = len(pdf_reader.pages)
+        extracted_text = ""
+        for page_num in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_num]
+            text = page.extract_text()
+            if text:
+                extracted_text += text + "\n"
         
-        for page_num, page in enumerate(pdf_reader.pages, 1):
-            try:
-                page_text = page.extract_text()
-                if page_text and page_text.strip():
-                    extracted_text.append(f"--- Page {page_num} ---\n{page_text}")
-            except Exception as e:
-                print(f"Error extracting page {page_num}: {str(e)}")
-                continue
-        
-        if not extracted_text:
-            return None
-            
-        # Combine all pages
-        full_text = "\n\n".join(extracted_text)
-        
-        # Clean up text
-        full_text = clean_text(full_text)
-        
-        return full_text
+        return extracted_text.strip()
         
     except Exception as e:
-        print(f"PDF extraction error: {str(e)}")
-        return None
+        print(f"Error extracting text from PDF: {str(e)}")
+        return ""
 
-def clean_text(text: str) -> str:
+def get_pdf_metadata(pdf_file):
     """
-    Clean extracted text by removing extra whitespace and formatting issues
+    Extract metadata from PDF file
     
     Args:
-        text: Raw extracted text
+        pdf_file: Uploaded PDF file object
         
     Returns:
-        Cleaned text
+        dict: PDF metadata
     """
-    # Remove excessive newlines
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    
-    # Join with single newlines
-    cleaned = '\n'.join(lines)
-    
-    # Remove multiple spaces
-    import re
-    cleaned = re.sub(r' +', ' ', cleaned)
-    
-    return cleaned
+    try:
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        metadata = pdf_reader.metadata
+        return {
+            "pages": len(pdf_reader.pages),
+            "title": metadata.title if metadata and metadata.title else "Unknown",
+            "author": metadata.author if metadata and metadata.author else "Unknown",
+            "creator": metadata.creator if metadata and metadata.creator else "Unknown"
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
-def get_text_statistics(text: str) -> dict:
+def validate_pdf(pdf_file):
     """
-    Get statistics about extracted text
+    Validate if the PDF is readable and contains text
     
     Args:
-        text: Extracted text content
+        pdf_file: Uploaded PDF file object
         
     Returns:
-        Dictionary with text statistics
+        tuple: (is_valid, message)
     """
-    words = text.split()
-    return {
-        'characters': len(text),
-        'words': len(words),
-        'pages': text.count('--- Page') if '--- Page' in text else 1,
-        'paragraphs': text.count('\n\n')
-    }
+    try:
+        # Check if file is PDF
+        if not pdf_file.name.lower().endswith('.pdf'):
+            return False, "File must be a PDF"
+        
+        # Try to read the PDF
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        
+        # Check if PDF is encrypted
+        if pdf_reader.is_encrypted:
+            return False, "PDF is encrypted. Please provide an unencrypted PDF."
+        
+        # Check if PDF has pages
+        if len(pdf_reader.pages) == 0:
+            return False, "PDF has no pages."
+        
+        # Try to extract text from first page to check if it's selectable
+        first_page = pdf_reader.pages[0]
+        text = first_page.extract_text()
+        if not text or len(text.strip()) < 10:
+            return False, "PDF appears to be scanned or image-based. Please use a PDF with selectable text."
+        
+        return True, "PDF is valid and ready for processing."
+        
+    except Exception as e:
+        return False, f"Error validating PDF: {str(e)}"
